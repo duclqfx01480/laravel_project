@@ -1,0 +1,14 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Variables - Bổ sung css tự viết (custom.scss)
+@import 'custom';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// Font-Awesome
+@import '~@fortawesome/fontawesome-free/css/all.css'; // dấu ~ sẽ trỏ về 'node_modules'
