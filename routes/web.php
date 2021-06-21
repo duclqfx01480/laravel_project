@@ -54,3 +54,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Trong views/auth/login.blade.php, dòng 57
 // <i class="fas fa-caret-square-right"></i>
 
+// 9. Kết nối CSDL và Migration
+// Tên CSDL: myhobbies
+// Thêm thông tin CSDL vào file .env
+// Khi có các sửa đổi trong .env phải xóa cache
+// php artisan config:cache
+// Chạy migration : php artisan migrate
+
+
