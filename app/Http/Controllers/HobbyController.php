@@ -12,10 +12,11 @@ class HobbyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($name, $age)
+    public function index()
     {
-        // dd -> die and dump -> helper function
-        dd($name . ' is ' . $age . ' years old.');
+        $hobbies = Hobby::all();
+        return view('hobby.index')->with(['hobbies'=>$hobbies]);
+
     }
 
     /**
@@ -26,6 +27,7 @@ class HobbyController extends Controller
     public function create()
     {
         //
+        return view('hobby.create');
     }
 
     /**
@@ -36,7 +38,30 @@ class HobbyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // 25. Server-side validation
+        $request->validate([
+            'name' => 'required|min:3',
+            'description' => 'required|min:5',
+        ]);
+        // Phần validate này sẽ xóa (clear) dữ liệu của field nếu các trường không thỏa
+        // Để không xóa các field, trong views/hobby/create.blade.php, ở input name, bổ sung value="{{old('name')}}"
+        // Tương tự cho input description
+
+        // 24. Lưu Hobby
+        // Tạo ra một hobby mới, dựa vào name và description của request
+        $hobby = new Hobby([
+            'name'=>$request['name'],
+            'description'=>$request['description']
+        ]);
+        // Lưu hobby
+        $hobby->save();
+
+        // Gọi this-> phương thức index, mà trong phương thức index lại trả về view hobby.index
+        // => Chuyển hướng đến trang index
+        return $this->index()->with([
+            // 28. Tạo thông báo đã thêm Hobby thành công
+            'message_success'=> 'The hobby <b>' . $hobby->name . '</b> was added successfull'
+        ]);
     }
 
     /**

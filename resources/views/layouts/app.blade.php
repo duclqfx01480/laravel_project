@@ -41,6 +41,7 @@
                         <li><a class="nav-link {{ Request::is('/') ? ' active' : '' }}" href="/">Start</a></li>
                         <li><a class="nav-link {{ Request::is('info') ? ' active' : '' }}" href="/info">Information</a></li>
                         <!-- không nhập dấu / trước info, chỉ cần nhập info cho route info là được -->
+                        <li><a class="nav-link {{ Request::is('hobby*') ? ' active' : '' }}" href="/hobby">Hobbies</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -83,6 +84,39 @@
         </nav>
 
         <main class="py-4">
+            {{-- 28. Tạo thông báo đã thêm Hobby thành công --}}
+            @isset($message_success)
+                <div class="container">
+                    <div class="alert alert-success" role="alert">
+                        {!! $message_success !!}
+                    </div>
+                </div>
+            @endisset
+
+            {{--warning in yellow highlight --}}
+            @isset($message_warning)
+                <div class="container">
+                    <div class="alert alert-warning" role="alert">
+                        {!! $message_warning !!}
+                    </div>
+                </div>
+            @endisset
+
+            {{-- 26. Validation --}}
+            {{-- Xuất thông báo lỗi Validation --}}
+            @if($errors->any())
+                <div class="container">
+                    <div class="alert alert-danger" role="alert">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li> {!! $error !!}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
+
+
             @yield('content')
         </main>
     </div>

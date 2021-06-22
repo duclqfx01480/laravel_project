@@ -121,6 +121,54 @@ Route::get('/info', function(){
 // 19. Routing to functions và sử dụng placeholder
 Route::get('/test/{name}/{age}', [\App\Http\Controllers\HobbyController::class, 'index']);
 
+// 20. Resource Route to HobbyController
+
+// 21. Lấy hobbies từ CSDL và thêm Navigate cho hobbies
+Route::resource('hobby', \App\Http\Controllers\HobbyController::class);
+// Trong HobbyController, viết trong hàm index để lấy hobbies từ CSDL
+// Thêm navigation cho hobby trong resources/views/layouts/app.blade.php
+
+// 22. Output/ Display Hobbies
+// Trong views, tạo một thư mục mới, tên hobby
+// Trong hobby vừa tạo, thêm mới 'index.blade.php', copy nội dung của home.blade.php qua file này.
+
+// 23. Form for new Hobbies
+// Trong hobby/index.blade.php, tạo thêm 1 div => 1 anchor link sẽ trỏ đến '/hobby/create'
+// Trong HobbyController, phần create, viết hàm trả về view hobby.create
+// Trong views/hobby/create.blade.php, viết code cho view để tạo form nhập Hobby
+
+// 24. Lưu Hobby (nhập dữ liệu từ form thêm hobby mới)
+// Step 1: Action & Method của from: Trong views/hobby/create.blade.php, form => thêm action & method cho form
+// Step 2: CSRF Token: Thêm @csrf ở dòng 14 (phần này sẽ tạo ra một input ẩn, có name là _token)
+// Step 3: Trong HobbyController, phần store
+// Sau khi viết code cho phương thức store xong, nếu chạy sẽ phát sinh lỗi ...mass assignment ..., do đó cần bước 4
+// Step 4: Viết thêm hàm fillable trong Hobby Model (app\Models\Hobby) để cho phép mass assignment
+
+
+// 25. Server-side Validation of Laravel with validate()
+// Cần validate trước khi thêm dữ liệu vào CSDL. Ví dụ: Nếu form để trống và nhấn thêm Hobby -> phát sinh lỗi (column cannot be null)
+// Viết Validation trong HobbyController, trong phương thức store
+
+// 26. Validation- Hiển thị lỗi của các input không thỏa
+// Tìm alert của bootstrap, copy code một alert nào đó
+// Trong views/layouts/app.blade.php, trước @yield('content'),
+// => bổ sung 1 div sau đó paste code đã copy ở trên ra và viết code (xem thêm  trong app.blade.php)
+// Các thông báo lỗi được lưu ở: resources/lang/en/validation.php
+// => Có thể tinh chỉnh các thông báo này. Ví dụ: dòng 89, dòng 101, thêm bold cho :attribute in ra
+// [Option] Chỉnh sửa font trong resources/sass/_variables.scss, phần $font-family-sans-serif => Sau đó chạy lại npm run dev
+
+// 27. Validate: Lỗi của từng input riêng biệt
+// Quay lại form cần chỉnh sửa ở 'resources/views/hobby/create.blade.php'
+// Thêm class border cho input name và thêm small [text], xem thêm ở trong form
+
+// 28. Tạo thông báo đã thêm Hobby thành công
+// * Trong resources/views/layouts/app.blade.php
+// - Thêm hai alert (success và warning) trước phần về validation
+// * Trong HobbyController, phần store, khi return trả về thêm ->with() và truyền vào message_success
+
+
+
+
 
 
 
