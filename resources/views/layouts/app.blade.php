@@ -7,7 +7,11 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Thêm Description dynamic cho từng trang -->
+    <meta name="description" content="@yield('page_description', 'A cool and mini Social Network to share your hobbies')">
+
+    {{--    <title>{{ config('app.name', 'Laravel') }}</title> --}}
+    <title> @yield('page_title', 'MyHobbies') </title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -33,7 +37,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        <!-- Bổ sung các link cho left nav bar -->
+                        <li><a class="nav-link {{ Request::is('/') ? ' active' : '' }}" href="/">Start</a></li>
+                        <li><a class="nav-link {{ Request::is('info') ? ' active' : '' }}" href="/info">Information</a></li>
+                        <!-- không nhập dấu / trước info, chỉ cần nhập info cho route info là được -->
                     </ul>
 
                     <!-- Right Side Of Navbar -->
