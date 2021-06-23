@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('page_description')
-@section('page_title', 'Starting Page')
+@section('page_title', 'Home')
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Starting Page') }}</div>
+                <div class="card-header">{{ __('Home') }}</div>
 
                 <div class="card-body">
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tristique massa eget nulla mollis vestibulum. Fusce elit magna, condimentum convallis aliquet in, commodo porta metus. Etiam dignissim sapien ex, ac vulputate purus sodales vitae. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla fermentum magna ligula, non dictum justo vestibulum quis. Morbi at dui maximus, scelerisque tortor ut, rhoncus diam. Pellentesque lobortis varius ante a rhoncus.</p>

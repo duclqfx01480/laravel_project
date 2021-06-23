@@ -166,6 +166,149 @@ Route::resource('hobby', \App\Http\Controllers\HobbyController::class);
 // - Thêm hai alert (success và warning) trước phần về validation
 // * Trong HobbyController, phần store, khi return trả về thêm ->with() và truyền vào message_success
 
+// 29. Tạo trang xem chi tiết
+// * Trong resources/views/hobby/index.blade.php
+// Link: Ở dòng 14 để hiển thị ra li, ta sẽ bổ sung link ở đây -> thêm a, thuộc tính title, href và echo ra $hobby->id
+// * Trong HobbyController, viết code phương thức show để hiển thị dữ liệu
+// * Phương thức show trả về view resources/views/hobby/show.blade.php => cần viết code cho blade này
+// *Trong show.blade.php, viết code trả về $hobby->name và $hobby->description
+
+
+// 30. Cập nhật (edit) - tạo form edit và lấy thông tin
+// info: php artisan route:list --name=hobby
+// | Method    | URI                | Name          | Action                                       |
+// +-----------+--------------------+---------------+----------------------------------------------+
+// | GET|HEAD  | hobby/{hobby}/edit | hobby.edit    | App\Http\Controllers\HobbyController@edit    |
+
+// * Trong index.blade.php -> Thêm một link edit ngay sau link chứa tên Hobby
+// * Trong HobbyController -> phương thức edit
+// * Trong view edit.blade.php, lấy dữ liệu trong $hobby đưa vào 2 fields (input)
+
+// 31. Update - Thực hiện cập nhật vào DB
+// info: PUT|PATCH | hobby/{hobby}      | hobby.update  | App\Http\Controllers\HobbyController@update
+// * Form của edit.blade.php
+//   - action là hobby/{{$hobby->id}}
+//   - method là PUT hoặc PATCH ở dòng 18: @method('PUT')
+// * Trong HobbyController -> phương thức update
+
+// 32. Xóa dữ liệu (trong destroy của HobbyController)
+// Info: | DELETE | hobby/{hobby} | hobby.destroy | App\Http\Controllers\HobbyController@destroy
+// * Thêm form và nút Delete trong resources/views/hobby/index.blade.php
+//   => Delete yêu cầu có phương thức delete nên cần triển khai một field ẩn => luôn cần 1 form
+// * Trong HobbyController -> viết destroy
+
+
+// 33, 34- Challenge - Tạo tag
+// * Trong app.blade.php, thêm điều hướng cho Tags
+// * Tạo Model [và các file liên quan] cho Tag: php artisan make:model Tag -a
+// * Migration: create_tags_table -> bổ sung 2 cột 'name' và 'style' kiểu string, chạy php artisan migrate
+// * Viết Resource Route
+Route::resource('tag', \App\Http\Controllers\TagController::class);
+// * Viết các phương thức trong TagController
+//   ** index
+//   ** create
+//   ** store
+//   ** show - không cần
+//   ** edit
+//   ** update
+//   ** destroy
+// * Viết các view mà TagController trả về
+
+
+
+/*
+|--------------------------------------------------------------------------
+| SECTION 5: DATABASE RELATIONSHIPS
+|--------------------------------------------------------------------------
+*/
+// * QUAN HỆ 1-1: Một hobby chỉ thuộc về một user, một user có thể có nhiều hobby
+// 36. Thêm cột user_id vào bảng hobbies
+// Tạo Migration để thêm cột user_id vào bảng hobbies 'php artisan make:migration add_user_id_to_hobbies_table'
+// Viết code cho phương thức up & down (xem thêm trong migration)
+// Sau khi viết xong, chạy migrate 'php artisan migrate'
+
+// * QUAN HỆ NHIỀU NHIỀU: Một hobby có thể có nhiều tag, một tag có thể được gắn trong nhiều hobby
+// 37. Tạo bảng trung gian (bảng hobby_tag)
+// Tạo Migration để tạo bảng trung gian: php artisan make:migration create_hobby_tag_table
+// Thêm các cột vào Migration, thêm PK, FK, và chạy migrate
+
+// 38. Bảng user - Bổ sung thêm cột motto (châm ngôn) và about_me (mô tả về bản thân)
+// Trong Migration create_users_table, bổ sung 2 cột sau cột email
+// refresh migrate: 'php artisan migrate:refresh'
+// migrate:refresh sẽ xóa toàn bộ bảng (bao gồm dữ liệu) và chạy lại tất cả migration => tạo lại các bảng
+// Chỉ dùng migrate:refresh khi ứng dụng chưa go live
+// Không nên dùng: Khi đã go live, khi làm việc với các developer khác [vì có thể làm xóa hết dữ liệu]
+//  -> Trong trường hợp đó, nên tạo mới một migration để thêm các cột cần thiết vào DB
+
+// 39. Seed tags
+// * Static Value Seeders (tags table)
+// Trong database/seeders, mở DatabaseSeeder và TagSeeder
+// DatabaseSeeder sẽ gọi TagSeeder, TagSeeder sẽ thêm dữ liệu vào bảng tags
+// Có hai cách chạy seed:
+// - php artisan db:seed
+// - php artisan migrate:refresh --seed // sẽ thực hiện migrate:refresh, sau đó seed dữ liệu
+
+// [  DatabaseSeeder -> TagSeeder, UserSeeder, HobbySeeder ]
+
+// 40. Seed users [UserSeeder]
+// * Dự án ban đầu tạo ra chưa có UserSeeder => cần tạo ra UserSeeder
+// 'php artisan make:seeder UserSeeder'
+// * Trong DatabaseSeeder, gọi UserSeeder
+// * Viết code cho UserSeeder (UserSeeder sẽ gọi factory để tạo random user)
+// * Chạy Seeder: php artisan migrate:refresh --seed (refresh lại migration và seed dữ liệu)
+
+
+// 41. Sử dụng each để seed các bảng đã tạo quan hệ
+// Mục tiêu: Với mỗi user sẽ tạo ra vài hobbies
+// * Viết code cho HobbyFactory (tạo ra hobby gồm tên và mô tả)
+// * Sửa lại UserSeeder, cứ mỗi lần seed một user sẽ seed thêm hobbies (thêm lệnh each sau create, xem thêm file UserSeeder)
+// * Chạy lại 'php artisan migrate:refresh --seed'
+//   => Đã seed xong dữ liệu cho các bảng (tag, user và hobby)
+
+// * QUAN HỆ 1-NHIỀU (bảng users-hobbies)
+//   - Bảng hobbies chưa có giá trị của cột user_id => tạo
+//   - Quay lại UserSeeder, viết thêm vào create của seed hobbies để thêm user_id
+//   - Chạy lại migrate:refresh --seed
+//   => Tạo xong dữ liệu cho quan hệ 1-nhiều
+
+// * QUAN HỆ NHIỀU-NHIỀU (bảng hobbies-tags)
+// FYI 41@ 08:40
+// Trong UserSeeder
+// với mỗi create hobby, sẽ thực hiện thêm hobby_id và tag_id vào bảng hobby_tag
+// (xem thêm ở UserSeeder)
+// Chạy lại migrate:refresh --seed
+
+// Note: Khi nào dùng DB Facade
+// - Khi không có Model (ở đây có Model Hobby, Tag, User nhưng không có Model Hobby_Tag, và cũng không cần thiết)
+
+// 42. Kết nối models với Eloquent Relationship
+// Mở 3 Models: Hobby, Tag, User
+// Xem thêm về phần viết quan hệ trong từng Model
+
+// 43. Test Relationship trong Tinker
+// Mở Command Prompt
+// Khởi động Tinker: 'php artisan tinker'
+//  * Tinker cho phép test CSDL mà không cần đến Front-end
+
+// Một số lệnh với Tinker
+// User::find(5)                            Tìm user có id là 5
+// User::find(5)->hobbies                   Lấy ra các hobbies của user này
+// User::find(5)->hobbies->pluck('name')    Chỉ lấy ra tên các hobbies
+
+// Hobby::find(100)->user                   Lấy ra user của hobby có id 100
+// Hobby::find(100)->tags->pluck('name')    Lấy ra tên các tags của hobby có id 100
+
+// Tag::first()                             Lấy tag đầu tiên
+// Tag::first()->hobbies->pluck('name')     Lấy ra tên các hobbies của tag đầu tiên
+// Tag::first()->hobbies->count()           Đếm xem có bao nhiêu hobbies có gắn tag này
+
+
+
+
+
+
+
+
 
 
 

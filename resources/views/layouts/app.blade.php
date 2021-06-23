@@ -38,10 +38,13 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <!-- Bổ sung các link cho left nav bar -->
-                        <li><a class="nav-link {{ Request::is('/') ? ' active' : '' }}" href="/">Start</a></li>
+                        <li><a class="nav-link {{ Request::is('/') ? ' active' : '' }}" href="/">Home</a></li>
                         <li><a class="nav-link {{ Request::is('info') ? ' active' : '' }}" href="/info">Information</a></li>
                         <!-- không nhập dấu / trước info, chỉ cần nhập info cho route info là được -->
                         <li><a class="nav-link {{ Request::is('hobby*') ? ' active' : '' }}" href="/hobby">Hobbies</a></li>
+
+                        <!-- 33, 34 - Challenge -->
+                        <li><a class="nav-link {{ Request::is('tag*') ? ' active' : ''}}" href="/tag">Tags</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

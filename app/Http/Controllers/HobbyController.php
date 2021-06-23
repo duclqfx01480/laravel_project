@@ -72,7 +72,12 @@ class HobbyController extends Controller
      */
     public function show(Hobby $hobby)
     {
-        //
+        // 29. Tạo trang xem chi tiết
+        // Trả về view hobby.show, do đó viết blade của show.blade.php trong resources/views/hobby/show.blad.php
+        // Truyền thêm $hobby qua cho view
+        return view('hobby.show')->with([
+            'hobby'=>$hobby
+        ]);
     }
 
     /**
@@ -84,6 +89,9 @@ class HobbyController extends Controller
     public function edit(Hobby $hobby)
     {
         //
+        return view('hobby.edit')->with([
+            'hobby'=>$hobby
+        ]);
     }
 
     /**
@@ -95,7 +103,23 @@ class HobbyController extends Controller
      */
     public function update(Request $request, Hobby $hobby)
     {
-        //
+        // Copy từ phương thức store xuống
+        $request->validate([
+            'name' => 'required|min:3',
+            'description' => 'required|min:5',
+        ]);
+
+        // Sửa thành update
+        $hobby->update([
+            'name'=>$request['name'],
+            'description'=>$request['description']
+        ]);
+
+        //$hobby->save(); - comment out/ delete dòng này
+
+        return $this->index()->with([
+            'message_success'=> 'The hobby <b>' . $hobby->name . '</b> was updated.'
+        ]);
     }
 
     /**
@@ -106,6 +130,12 @@ class HobbyController extends Controller
      */
     public function destroy(Hobby $hobby)
     {
-        //
+        $oldName = $hobby->name;
+        $hobby->delete();
+
+        // Chuyển hướng đến index và thông báo xóa thành công
+        return $this->index()->with([
+            'message_success' => 'The hobby <b>' . $oldName . '</b> was deleted.'
+        ]);
     }
 }

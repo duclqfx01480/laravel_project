@@ -11,6 +11,13 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    // 42. Kết nối các Models với Eloquent Relationship
+    // Một user có thể có nhiều hobby (chiều từ bảng users đến hobbies)
+    public function hobbies(){
+        return $this->hasMany(\App\Models\Hobby::class);
+    }
+
+
     /**
      * The attributes that are mass assignable.
      *

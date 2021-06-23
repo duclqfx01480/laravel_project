@@ -11,7 +11,24 @@
                         <ul class="list-group">
                             @foreach($hobbies as $hobby)
                                 <li class="list-group-item">
-                                    {{ $hobby->name }}
+                                    <a title="Show Details" href="/hobby/{{$hobby->id}}">{{ $hobby->name }}</a>
+                                    {{-- a -> 29. Tạo trang xem chi tiết --}}
+                                    {{-- a href sẽ dẫn đến hobby.show, do đó cần viết code trong HobbyController, phương thức show --}}
+                                    {{-- GET|HEAD | hobby/{hobby} | hobby.show | App\Http\Controllers\HobbyController@show --}}
+
+                                    {{-- 30. Cập nhật dữ liệu--}}
+                                    {{-- Thêm một link edit ngay sau link chứa tên Hobby --}}
+                                    <a class="btn btn-sm btn-outline-primary ml-2" title="Edit this hobby" href="/hobby/{{$hobby->id}}/edit"><i class="fas fa-edit"></i> Edit</a>
+
+                                    {{-- 31. Xóa dữ  liệu--}}
+                                    {{-- Thêm link delete --}}
+                                    {{-- Delete cần phương thức delete nên sẽ cần một form --}}
+                                    <form class="float-right" style="display: inline" action="/hobby/{{$hobby->id}}" method="post">
+                                        @csrf
+                                        @method("DELETE")
+                                        <input class="btn btn-sm btn-outline-danger ml-2" type="submit" title="Delete this hobby" value="Delete">
+                                    </form>
+
                                 </li>
                             @endforeach
                         </ul>

@@ -25,6 +25,13 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
+
+            // 40. Seeder users
+            // Ở đây đang bổ sung 2 cột là motto và about_me do mới thêm 2 cột này vào DB
+            'motto' => $this->faker->realText(30),
+            // about_me không chỉ định kích thước tối đa => có thể nhận chuỗi dài
+            'about_me' => $this->faker->realText(),
+
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),

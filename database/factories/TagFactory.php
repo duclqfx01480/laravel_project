@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Hobby;
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class HobbyFactory extends Factory
+class TagFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Hobby::class;
+    protected $model = Tag::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +22,7 @@ class HobbyFactory extends Factory
     public function definition()
     {
         return [
-            // 41.
-            // Viết code tạo random hobby, bao gồm name và description (tên và mô tả cho hobby)
-            'name' => $this->faker->realText(30),
-            'description' => $this->faker->realText(),
+            //
         ];
     }
 }
