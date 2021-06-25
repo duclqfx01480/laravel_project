@@ -5,7 +5,18 @@
         <div class="row justify-content-center">
             <div class="col-md-11">
                 <div class="card">
-                    <div class="card-header">{{ __('All the hobbies') }}</div>
+                    {{-- 51 @ 16:53 Hiển thị tiêu đề tương ứng với dữ liệu của hobbies (có đang lọc hay không) --}}
+                    @isset($filter)
+                        {{--<div class="card-header">{{ __('Filtered Hobbies by tag ' . $filter->name) }}</div> --}}
+                        <div class="card-header">
+                            Filtered Hobbies by tag <span style="font-size: 120%;" class="badge badge-{{ $filter->style }}">{{ $filter->name }}</span>
+                            <span class="float-right"><a href="/hobby">Show all Hobbies</a></span>
+                        </div>
+
+                    @else
+                        <div class="card-header">{{ __('All the hobbies') }}</div>
+                    @endisset
+
 
                     <div class="card-body">
                         <ul class="list-group">
@@ -22,7 +33,8 @@
                                     {{-- wrap 2 nút này trong auth và endauth thì nếu không đăng nhập nút sẽ ẩn đi--}}
 
                                     {{-- 48 Hiển thị tên người viết hobby --}}
-                                    <span class="small">Posted by: {{ $hobby->user->name }} ({{ $hobby->user->hobbies->count() }}) </span>
+                                    {{-- 51. Challenge <a> - Tạo link đến resource route để show user --}}
+                                    <span class="small">Posted by: <a href="/user/{{ $hobby->user->id }}">{{ $hobby->user->name }} </a> ({{ $hobby->user->hobbies->count() }}) </span>
 
                                     @auth
                                         {{-- 31. Xóa dữ  liệu--}}
@@ -43,7 +55,7 @@
                                     <br>
                                     {{-- 50. Hiển thị tag của hobby đó ra --}}
                                     @foreach($hobby->tags as $tag)
-                                        <a href=""><span class="badge badge-{{ $tag->style }}">{{ $tag->name }}</span></a>
+                                        <a href="/hobby/tag/{{ $tag->id }}"><span class="badge badge-{{ $tag->style }}">{{ $tag->name }}</span></a>
                                     @endforeach
 
                                 </li>

@@ -362,7 +362,36 @@ Route::resource('tag', \App\Http\Controllers\TagController::class);
 // php artisan make:controller UserController -r --model=User
 // => Tạo UserController
 
+// Tạo Resource route
+Route::resource('user', \App\Http\Controllers\UserController::class);
 
+// Trong hobby/index.blade.php, chổ hiển thị tên người dùng, thêm 1 link dẫn đến route để show user
+// Viết view user/show.blade.php
+// Phương thức show của UserController, trả về view và truyền thêm dữ liệu liên quan
+
+// 52. Lọc hobbies theo tag (hobbyTagController)
+// Tạo Controller mới: hobbyTagController
+// php artisan make:controller hobbyTagController
+
+// Trong hobbyTagController, viết hàm để hiển thị hobbies theo một tag nào đó
+
+// Cần một route gọi đến hàm đó (vừa viết)
+// Route nhận vào tag_id và sẽ được truyền vào hobbyTagController
+Route::get('/hobby/tag/{tag_id}', [\App\Http\Controllers\hobbyTagController::class, "getFilteredHobbies"])->name('hobby_tag');
+// Trong hobby/index.blade.php và show.blade.php ở phần hiển thị tag, thêm link đến route trên, truyền thêm tag_id
+
+// Trong Model Tag, định nghĩa quan hệ (từ bảng tags đến bảng hobbies), cho phép lọc hobbies
+
+// Để chỉnh sửa tiêu đề của phần hiển thị dữ liệu thành "Đang lọc dữ liệu cho tag..." thì truyền thêm $filter (là tag đang lọc) qua cho view
+// Trong hobby/index.blade.php:
+//  - Nếu nhận được $filter => chỉnh tiêu đề gì đó
+//  - Nếu không nhận được $filter => hiển thị tiêu đề gì đó
+
+
+// 54. Tùy chỉnh trang báo lỗi 404
+// Copy các trang báo lỗi về views/errors
+// php artisan vendor:publish --tag=laravel-errors
+// Sau đó sửa mã HTML trong views/errors
 
 
 

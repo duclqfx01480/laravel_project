@@ -9,6 +9,11 @@ class Tag extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'style',
+    ];
+
     // 42. Kết nối các Models với Eloquent Relationship
     // Quan hệ nhiều nhiều (hobbies-tags)
     // Một tag có thể thuộc về nhiều hobbies
@@ -16,8 +21,12 @@ class Tag extends Model
         return $this->belongsToMany(\App\Models\Hobby::class);
     }
 
-    protected $fillable = [
-        'name',
-        'style',
-    ];
+    // 53
+    public function filteredHobbies(){
+        return $this->belongsToMany(\App\Models\Hobby::class)
+            ->wherePivot('tag_id', $this->id)
+            ->orderBy('updated_at', 'DESC');
+    }
+
+
 }

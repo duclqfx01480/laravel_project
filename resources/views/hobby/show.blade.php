@@ -15,7 +15,7 @@
                         {{-- 50. Hiển thị tag của hobby đó ra --}}
                         <p>
                             @foreach($hobby->tags as $tag)
-                                <a href=""><span class="badge badge-{{ $tag->style }}">{{ $tag->name }}</span></a>
+                                <a href="/hobby/tag/{{ $tag->id }}"><span class="badge badge-{{ $tag->style }}">{{ $tag->name }}</span></a>
                             @endforeach
                         </p>
                     </div>
