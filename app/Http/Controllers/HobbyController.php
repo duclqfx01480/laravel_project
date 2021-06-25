@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 
 class HobbyController extends Controller
 {
+
+    // 46@ 2:39 - Chỉ user đã đăng nhập mới được thêm mới một hobby
+    // Thêm một constructor
+    public function __construct(){
+        // Nếu không đăng nhập thì chỉ được phép truy cập phương thức index và show
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +23,13 @@ class HobbyController extends Controller
      */
     public function index()
     {
-        $hobbies = Hobby::all();
+        //$hobbies = Hobby::all();
+        // 45.Pagination - Phân trang
+        //$hobbies = Hobby::paginate(10);
+
+        // 47. Sắp xếp hobbies theo ngày tạo
+        $hobbies = Hobby::orderBy('created_at', 'DESC')->paginate(10);
+
         return view('hobby.index')->with(['hobbies'=>$hobbies]);
 
     }
@@ -51,7 +66,8 @@ class HobbyController extends Controller
         // Tạo ra một hobby mới, dựa vào name và description của request
         $hobby = new Hobby([
             'name'=>$request['name'],
-            'description'=>$request['description']
+            'description'=>$request['description'],
+            'user_id' => auth()->id() // 46. Lưu thêm user_id, và cần chỉnh sửa trong Model để cho phép lưu (fillable)
         ]);
         // Lưu hobby
         $hobby->save();

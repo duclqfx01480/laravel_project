@@ -15,13 +15,14 @@
                                     <span style="font-size: 130%;" class="mr-2 badge badge-{{ $tag->style}}" >{{ $tag->name }}</span>
                                     {{--<a title="Show Details" href="/tag/{{$tag->id}}">{{ $tag->name }}</a> --}}
 
-                                    <a class="btn btn-sm btn-outline-primary ml-2" title="Edit this tag" href="/tag/{{$tag->id}}/edit"><i class="fas fa-edit"></i> Edit</a>
-
-                                    <form class="float-right" style="display: inline;" action="/tag/{{$tag->id}}" method="post">
-                                        @csrf
-                                        @method("DELETE")
-                                        <input class="btn btn-sm btn-outline-danger ml-2" type="submit" title="Delete this tag" value="Delete">
-                                    </form>
+                                    @auth
+                                        <form class="float-right" style="display: inline;" action="/tag/{{$tag->id}}" method="post">
+                                            @csrf
+                                            @method("DELETE")
+                                            <input class="btn btn-sm btn-outline-danger ml-2" type="submit" title="Delete this tag" value="Delete">
+                                        </form>
+                                        <a class="float-right btn btn-sm btn-outline-primary ml-2" title="Edit this tag" href="/tag/{{$tag->id}}/edit"><i class="fas fa-edit"></i> Edit</a>
+                                    @endauth
 
                                 </li>
                             @endforeach

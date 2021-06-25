@@ -198,6 +198,8 @@ Route::resource('hobby', \App\Http\Controllers\HobbyController::class);
 // * Trong HobbyController -> viết destroy
 
 
+// *** CHALLENGE ***
+
 // 33, 34- Challenge - Tạo tag
 // * Trong app.blade.php, thêm điều hướng cho Tags
 // * Tạo Model [và các file liên quan] cho Tag: php artisan make:model Tag -a
@@ -301,14 +303,64 @@ Route::resource('tag', \App\Http\Controllers\TagController::class);
 // Tag::first()                             Lấy tag đầu tiên
 // Tag::first()->hobbies->pluck('name')     Lấy ra tên các hobbies của tag đầu tiên
 // Tag::first()->hobbies->count()           Đếm xem có bao nhiêu hobbies có gắn tag này
+// Tag::all()->pluck('name')                Lấy ra tên của tất cả các tags
+// Tag::all()->pluck('name')->toArray()     Chuyển collection thành mảng
+
+// 44. Xem thêm ví dụ về Tinker và Collection
 
 
+/*
+|--------------------------------------------------------------------------
+| SECTION 6: DATA OUTPUT AND DATA LINKING
+|--------------------------------------------------------------------------
+*/
 
+// 45. Tạo phân trang
+// * Mở HobbyController -> $hobbies = Hobby::paginate(10); để mỗi trang có 10 bài đăng hobbies
+// * Trong resources/views/hobby/index.blade.php, thêm các nút chuyển trang trước nút thêm mới
+// * Trong resources/views/hobby/show.blade.php, chỉnh sửa url cho nút bấm quay về
 
+// 46. Thêm user_id vào hobby mỗi khi tạo mới hobby - dùng auth->id()
+// * Trong HobbyController, viết thêm trong phương thức store để lưu thêm id, và chỉnh sửa fillable trong Hobby Model
+// * Thêm chức năng, không đăng nhập thì chỉ được xem
+//   - Trong HobbyController: Thêm một function __construct (xem thêm trong HobbyController)
 
+// * Ẩn nút Edit và Delete nếu chưa đăng nhập (46@ 04:46)
+//   - Trong index.blade.php của hobby, wrap hai nút này trong cặp @auth và @endauth
+//   - Làm tương tự cho nút 'Add new Hobby'
 
+// Đăng nhập để xem các nút này xuất hiện lại
 
+// 47. Sắp xếp hobbies theo ngày tạo
+// HobbyController, sắp xếp trong index
 
+// Hiển thị ngày tạo hobby
+// FYI: 'Carbon' package of php
+
+// 48. Thêm tên người đăng và Hiển thị tổng số hobbies của người đó - $hobby->user->name + count()
+// * Thêm tên người đăng của từng hobby
+// * Hiển thị tổng số hobbies
+// Xem trong index.blade.php
+
+// 49. Cài đặt Laravel Debug Bar
+// composer require barryvdh/laravel-debugbar --dev
+
+// 50. Thêm tag vào trang index và trang show của Hobby
+// Thêm vào index.blade.php
+// Thêm vào show.blade.php
+
+// CHALLENGE
+// 51. Challenge
+// Trong trang hiển thị danh sách hobbies, ở đó đã có tên người tạo. Tạo liên kết cho tên người dùng, khi nhấn vào
+// ...sẽ mở ra trang xem chi tiết thông tin người dùng
+
+// Tạo UserController
+// Hiện đã có User Model nhưng chưa có Controller. Các Controller kia khi tạo cùng với Model, thêm option -a để tạo tất cả
+// Ở đây sẽ tạo controller, thêm option -r để tạo các file resource
+// thêm option --m và chỉ định tên Model để liên kết với User Model hiện có
+// (dùng php artisan make:controller -h để xem chi tiết)
+// php artisan make:controller UserController -r --model=User
+// => Tạo UserController
 
 
 

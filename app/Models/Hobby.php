@@ -28,6 +28,7 @@ class Hobby extends Model
     protected $fillable = [
         'name',
         'description',
+        'user_id', // 46. Lưu thêm user_id
     ];
 
 
