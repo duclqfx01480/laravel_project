@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Hobby;
 use Illuminate\Http\Request;
+use App\Models\Tag;
+use Illuminate\Support\Facades\Session;
 
 class HobbyController extends Controller
 {
@@ -19,7 +21,7 @@ class HobbyController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
     {
@@ -37,7 +39,7 @@ class HobbyController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function create()
     {
@@ -49,7 +51,7 @@ class HobbyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function store(Request $request)
     {
@@ -74,9 +76,19 @@ class HobbyController extends Controller
 
         // Gọi this-> phương thức index, mà trong phương thức index lại trả về view hobby.index
         // => Chuyển hướng đến trang index
+
+        /* 57 comment out phần này
         return $this->index()->with([
             // 28. Tạo thông báo đã thêm Hobby thành công
             'message_success'=> 'The hobby <b>' . $hobby->name . '</b> was added successfull'
+        ]);
+        */
+
+        /* 57. thay thế phần đã bị comment trên bằng phần dưới dây */
+        return redirect('/hobby/' . $hobby->id)->with([
+            // Gởi kèm thông báo nhắc nhở thêm tag cho bài viết
+            // Phương thức show (bên dưới) sẽ gởi kèm cả message_warning này
+            'message_warning' => 'Please add some tags for this post'
         ]);
     }
 
@@ -84,15 +96,24 @@ class HobbyController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Hobby  $hobby
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function show(Hobby $hobby)
     {
+        // 55. Fetch tất cả các tags exists
+        $allTags = Tag::all();
+        $usedTags = $hobby->tags;
+        $availableTags = $allTags->diff($usedTags);
+        // Khi có availableTags -> gửi nó cho Front-end ở return bên dưới
+
         // 29. Tạo trang xem chi tiết
         // Trả về view hobby.show, do đó viết blade của show.blade.php trong resources/views/hobby/show.blad.php
         // Truyền thêm $hobby qua cho view
         return view('hobby.show')->with([
-            'hobby'=>$hobby
+            'hobby'=>$hobby,
+            'availableTags' => $availableTags, // 55. gửi $availableTags cho front-end, sau đó qua view hobby/show.blade.php và hiển thị lên
+            'message_success' => Session::get('message_success'), // truyền thêm cả thông báo
+            'message_warning' => Session::get('message_warning')
         ]);
     }
 
@@ -100,7 +121,7 @@ class HobbyController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Hobby  $hobby
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function edit(Hobby $hobby)
     {

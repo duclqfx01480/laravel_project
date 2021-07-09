@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tag;
+use App\Models\Hobby;
 
 class hobbyTagController extends Controller
 {
@@ -29,4 +30,36 @@ class hobbyTagController extends Controller
             'filter' => $filter
         ]); // truyền dữ liệu ở tham số thứ hai, hoặc dùng with như ở trên
     }
+
+    // 55
+    public function attachTag($hobby_id, $tag_id){
+        $hobby = Hobby::find($hobby_id);
+
+        // Lấy tag ra để thông báo gắn tag nào thành công
+        $tag = Tag::find($tag_id);
+
+        // tags là relationship đã tạo trong Hobby model
+        $hobby->tags()->attach($tag_id);
+
+        return back()->with([
+            'message_success' => 'The Tag <b>' . $tag->name . '</b> was added.'
+        ]);
+
+    }
+
+    public function detachTag($hobby_id, $tag_id){
+        $hobby = Hobby::find($hobby_id);
+        $tag = Tag::find($tag_id);
+
+        $hobby->tags()->detach($tag_id);
+
+        return back()->with([
+            'message_success' => 'The Tag <b>' . $tag->name . '</b> was removed.'
+        ]);
+
+    }
+
+
+
+
 }

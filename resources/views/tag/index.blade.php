@@ -12,17 +12,25 @@
 
                             @foreach($tags as $tag)
                                 <li class="list-group-item">
+                                    <!--
                                     <span style="font-size: 130%;" class="mr-2 badge badge-{{ $tag->style}}" >{{ $tag->name }}</span>
+                                    -->
                                     {{--<a title="Show Details" href="/tag/{{$tag->id}}">{{ $tag->name }}</a> --}}
+                                    <a href="/hobby/tag/{{ $tag->id }}" style="font-size: 110%;" class="mr-2 badge badge-{{ $tag->style }}" >{{ $tag->name }}</a>
 
                                     @auth
+                                        <!-- DELETE -->
                                         <form class="float-right" style="display: inline;" action="/tag/{{$tag->id}}" method="post">
                                             @csrf
                                             @method("DELETE")
                                             <input class="btn btn-sm btn-outline-danger ml-2" type="submit" title="Delete this tag" value="Delete">
                                         </form>
+                                        <!-- EDIT -->
                                         <a class="float-right btn btn-sm btn-outline-primary ml-2" title="Edit this tag" href="/tag/{{$tag->id}}/edit"><i class="fas fa-edit"></i> Edit</a>
                                     @endauth
+
+                                    <!-- 56. Tạo link thống kê số bài viết có gắn thẻ tương ứng -->
+                                    <a href="/hobby/tag/{{ $tag->id }}" class="float-right">in {{ $tag->hobbies->count() }} posts</a>
 
                                 </li>
                             @endforeach

@@ -393,6 +393,70 @@ Route::get('/hobby/tag/{tag_id}', [\App\Http\Controllers\hobbyTagController::cla
 // php artisan vendor:publish --tag=laravel-errors
 // Sau đó sửa mã HTML trong views/errors
 
+// 55. Attach hay Detach tag vào một hobby
+// Mở hobbyTagController -> viết hai hàm attachTag và DetachTag
+// Viết route để trỏ về hai hàm đó
+
+//  - Attach Tag
+Route::get('/hobby/{hobby_id}/tag/{tag_id}/attach', [\App\Http\Controllers\hobbyTagController::class, 'attachTag']);
+
+//  - Detach Tag
+Route::get('/hobby/{hobby_id}/tag/{tag_id}/detach', [\App\Http\Controllers\hobbyTagController::class, 'detachTag']);
+
+// Chỉnh sửa view hobby/show.blade.php
+//  (Để hiện ra các tag chưa dùng bên dưới nội dung post, cho phép gắn tag; và click tag đã gắn để gỡ tag)
+//  (Attached tags và all available tags)
+
+// Trong HobbyController, phương thức show, viết code để xác định tất cả các tag available
+// và gửi đến front-end để hiển thị lên
+
+
+// 56. Tạo thống kê mức độ sử dụng cho từng Tag (trong view tag/index.blade.php)
+// Trong view tag/index.blade.php, sau phần form để edit- delete sẽ tạo link thống kê
+// (Khi click link sẽ dẫn đến danh sách bài viết có gắn tag đó)
+
+// 57. Improve
+// 1. Cải tiến home page (trang xuất hiện khi người dùng đăng nhập thành công) - home.blade.php
+//    1.1 Thêm lời chào
+//    1.2. Thêm nút để đăng bài mới (hobby)
+// 2. Chỉnh sửa menu (menu Home riêng cho guest và người dùng đã đăng nhập)- trong views/layouts/app.blade.php
+// 3. Thêm chức năng, sau khi tạo mới hobby từ trang home, chuyển ngay đến trang xem chi tiết của hobby đó
+//    (thay vì chuyển đến trang danh sách bài viết)
+//    3.1 HobbyController, phương thức store, sửa lại return, khi return sẽ gởi kèm cả message_warning
+//    3.2 Thông báo: Hãy thêm một tag mới - trong views/layouts/app.blade.php, viết trong phần message_warning
+
+// 58. Hiển thị Hobby của người dùng hiện tại lên trang home (home.blade.php)
+// 1. Trình bày như views/hobby/index.blade.php
+//    => Copy nguyên đoạn ul (phần hiển thị danh sách hobby)
+//    => Paste qua home.blade.php, loại bỏ các phần không cần thiết
+//    => Đoạn code vừa đem qua home.blade.php không có $hobbies, cần viết thêm ở HomeController
+// 2. Ở HomeController, ở phương thức index cần fetch hobbies của user hiện tại và trả cho Front-end
+
+// 59. Thêm danh sách hobbies vào profile của user
+// Phần hiển thị lên profile user là views/user/show.blade.php
+
+
+/*
+|--------------------------------------------------------------------------
+| SECTION 7: IMAGE UPLOAD
+|--------------------------------------------------------------------------
+*/
+
+// 63. Chuẩn bị Front-end cho hình ảnh
+// - Trong .gitignore, thêm một dòng /public/img (để hình ảnh test không commit lên Git)
+// - Tạo một branch mới cho git:
+//      git checkout -b image-upload
+//      >> Switched to a new branch 'image-upload'
+// - Kiểm tra các branches: Có hai branches: image-upload và main, sẽ merge image-upload vào branch master sau khi làm xong
+//      git branch
+//      >> * image-upload
+//      >>   main
+
+// - Copy img vào thư mục public/img của dự án
+
+
+
+
 
 
 

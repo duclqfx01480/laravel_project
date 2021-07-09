@@ -38,7 +38,17 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <!-- Bổ sung các link cho left nav bar -->
-                        <li><a class="nav-link {{ Request::is('/') ? ' active' : '' }}" href="/">Home</a></li>
+
+                        <!-- Menu home chỉ xuất hiện với những user đã login -->
+                        @auth
+                            <li><a class="nav-link {{ Request::is('home') ? ' active' : '' }}" href="/home">Home</a></li>
+                        @endauth
+
+                        <!-- Menu Home này cho user nào chưa log in (guest) -->
+                        @guest
+                            <li><a class="nav-link {{ Request::is('/') ? ' active' : '' }}" href="/">Home</a></li>
+                        @endguest
+
                         <li><a class="nav-link {{ Request::is('info') ? ' active' : '' }}" href="/info">Information</a></li>
                         <!-- không nhập dấu / trước info, chỉ cần nhập info cho route info là được -->
                         <li><a class="nav-link {{ Request::is('hobby*') ? ' active' : '' }}" href="/hobby">Hobbies</a></li>
