@@ -19,14 +19,24 @@
                                     <a href="/hobby/tag/{{ $tag->id }}" style="font-size: 110%;" class="mr-2 badge badge-{{ $tag->style }}" >{{ $tag->name }}</a>
 
                                     @auth
+
                                         <!-- DELETE -->
-                                        <form class="float-right" style="display: inline;" action="/tag/{{$tag->id}}" method="post">
-                                            @csrf
-                                            @method("DELETE")
-                                            <input class="btn btn-sm btn-outline-danger ml-2" type="submit" title="Delete this tag" value="Delete">
-                                        </form>
+                                        <!-- 88 -->
+                                        @can('delete', $tag)
+                                            <form class="float-right" style="display: inline;" action="/tag/{{$tag->id}}" method="post">
+                                                @csrf
+                                                @method("DELETE")
+                                                <input class="btn btn-sm btn-outline-danger ml-2" type="submit" title="Delete this tag" value="Delete">
+                                            </form>
+                                        @endcan
+
                                         <!-- EDIT -->
-                                        <a class="float-right btn btn-sm btn-outline-primary ml-2" title="Edit this tag" href="/tag/{{$tag->id}}/edit"><i class="fas fa-edit"></i> Edit</a>
+                                        <!-- 88 -->
+                                        @can('update', $tag)
+                                            <a class="float-right btn btn-sm btn-outline-primary ml-2" title="Edit this tag" href="/tag/{{$tag->id}}/edit">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                        @endcan
                                     @endauth
 
                                     <!-- 56. Tạo link thống kê số bài viết có gắn thẻ tương ứng -->
@@ -39,9 +49,11 @@
                     </div>
                 </div>
 
-                <div class="mt-2">
-                    <a class="btn btn-success btn-sm" href="/tag/create"><i class="fas fa-plus-circle"></i> Add new Tag</a>
-                </div>
+                @can('create', $tag)
+                    <div class="mt-2">
+                        <a class="btn btn-success btn-sm" href="/tag/create"><i class="fas fa-plus-circle"></i> Add new Tag</a>
+                    </div>
+                @endcan
 
             </div>
         </div>

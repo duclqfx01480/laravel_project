@@ -11,7 +11,7 @@
 
                         {{--  POST | hobby  | hobby.store | App\Http\Controllers\HobbyController@store | web --}}
                         {{--  truyền đến /hobby, phương thức post, sẽ gọi hàm store của HobbyController => cần viết hàm store --}}
-                        <form action="/hobby" method="post">
+                        <form autocomplete="off" action="/hobby" method="post" enctype="multipart/form-data">
                             {{-- CSRF Token --}}
                             @csrf
 
@@ -21,6 +21,15 @@
                                 <input type="text" class="form-control{{ $errors->has('name')? ' border-danger' : '' }}" id="name" name="name" value="{{old('name')}}">
                                 {{-- 27. Validate: Lỗi của từng input riêng biệt, phần $errors bên dưới --}}
                                 <small class="form-text text-danger">{!! $errors->first('name') !!}</small>
+                            </div>
+
+                            <!-- 66. Thêm field file upload -->
+                            <!-- Để upload ảnh thì ở form bổ sung thêm enctype="multipart/form-data" (xem ở trên) -->
+                            <!-- và tắt Autocomplete -->
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                <input type="file" class="form-control {{ $errors->has('name')? ' border-danger' : '' }}" id="image" name="image" value="">
+                                <small class="form-text text-danger">{!! $errors->first('image') !!}</small>
                             </div>
 
                             <div class="form-group">

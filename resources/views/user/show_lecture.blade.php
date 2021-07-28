@@ -33,6 +33,7 @@
                                     </p>
                                 @endif
                             </div>
+
                             <div class="col-md-3">
 {{--                                <img class="img-thumbnail" src="/img/300x400.jpg" alt="{{ $user->name }}">--}}
                                 <img class="img-thumbnail" src="{{ URL::asset('img/300x400.jpg') }}" alt="{{ $user->name }}">

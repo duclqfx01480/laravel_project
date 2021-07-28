@@ -25,7 +25,8 @@
                                         {{ $hobby->name }}
                                     </a>
 
-                                    <span class="mx-2"><small>by <a href="/user/{{ $hobby->user->id }}">{{ $hobby->user->name }} ({{ $hobby->user->hobbies->count() }} )</a></small>
+                                    <span class="mx-2">
+                                        <small>by <a href="/user/{{ $hobby->user->id }}">{{ $hobby->user->name }} ({{ $hobby->user->hobbies->count() }} )</a></small>
                                         <a href="/user/{{ $hobby->user->id }}">
 {{--                                            <img class="rounded" src="/img/thumb_portrait.jpg">--}}
                                             <img class="rounded" src="{{ URL::asset('img/thumb_portrait.jpg') }}">

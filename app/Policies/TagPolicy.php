@@ -10,6 +10,13 @@ class TagPolicy
 {
     use HandlesAuthorization;
 
+    public function before($user, $ability){
+        // nếu là admin thì được phép thực hiện hết
+        if($user->role === 'admin'){
+            return true;
+        }
+    }
+
     /**
      * Determine whether the user can view any models.
      *
@@ -18,7 +25,7 @@ class TagPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        // Xem tag trong index page thì ai cũng được phép
     }
 
     /**
@@ -30,7 +37,8 @@ class TagPolicy
      */
     public function view(User $user, Tag $tag)
     {
-        //
+        // Chỉ có admin mới được thực hiện
+        return false;
     }
 
     /**
@@ -41,7 +49,8 @@ class TagPolicy
      */
     public function create(User $user)
     {
-        //
+        // Chỉ có admin mới được thực hiện
+        return false;
     }
 
     /**
@@ -53,7 +62,8 @@ class TagPolicy
      */
     public function update(User $user, Tag $tag)
     {
-        //
+        // Chỉ có admin mới được thực hiện
+        return false;
     }
 
     /**
@@ -65,7 +75,8 @@ class TagPolicy
      */
     public function delete(User $user, Tag $tag)
     {
-        //
+        // Chỉ có admin mới được thực hiện
+        return false;
     }
 
     /**
@@ -77,7 +88,8 @@ class TagPolicy
      */
     public function restore(User $user, Tag $tag)
     {
-        //
+        // Chỉ có admin mới được thực hiện
+        return false;
     }
 
     /**
@@ -89,6 +101,7 @@ class TagPolicy
      */
     public function forceDelete(User $user, Tag $tag)
     {
-        //
+        // Chỉ có admin mới được thực hiện
+        return false;
     }
 }

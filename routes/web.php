@@ -398,10 +398,12 @@ Route::get('/hobby/tag/{tag_id}', [\App\Http\Controllers\hobbyTagController::cla
 // Viết route để trỏ về hai hàm đó
 
 //  - Attach Tag
-Route::get('/hobby/{hobby_id}/tag/{tag_id}/attach', [\App\Http\Controllers\hobbyTagController::class, 'attachTag']);
+Route::get('/hobby/{hobby_id}/tag/{tag_id}/attach', [\App\Http\Controllers\hobbyTagController::class, 'attachTag'])
+    ->middleware('auth');
 
 //  - Detach Tag
-Route::get('/hobby/{hobby_id}/tag/{tag_id}/detach', [\App\Http\Controllers\hobbyTagController::class, 'detachTag']);
+Route::get('/hobby/{hobby_id}/tag/{tag_id}/detach', [\App\Http\Controllers\hobbyTagController::class, 'detachTag'])
+    ->middleware('auth');
 
 // Chỉnh sửa view hobby/show.blade.php
 //  (Để hiện ra các tag chưa dùng bên dưới nội dung post, cho phép gắn tag; và click tag đã gắn để gỡ tag)
@@ -443,6 +445,7 @@ Route::get('/hobby/{hobby_id}/tag/{tag_id}/detach', [\App\Http\Controllers\hobby
 */
 
 // 63. Chuẩn bị Front-end cho hình ảnh
+// * GIT [Optional]
 // - Trong .gitignore, thêm một dòng /public/img (để hình ảnh test không commit lên Git)
 // - Tạo một branch mới cho git:
 //      git checkout -b image-upload
@@ -453,10 +456,139 @@ Route::get('/hobby/{hobby_id}/tag/{tag_id}/detach', [\App\Http\Controllers\hobby
 //      >>   main
 
 // - Copy img vào thư mục public/img của dự án
+// - Chỉnh sửa các file blade.php (home, hobby/index và show, user/show) để thêm mã html chèn hình ảnh vào các nơi muốn hiển thị
+
+// 64. Cài đặt Lightbox
+// Chạy lệnh trong command line: npm install lightbox2 --save
+// Sau khi cài xong, đính kèm nó vào các file js trong dự án đang phát triển
+// - JS: Trong resources/js/bootstrap.js, thêm require('lightbox2')
+// - CSS: Trong resources/sass/app.scss, thêm import css của Lightbox
+// Sau khi import xong JS và CSS, chạy npm run dev để compile lại các tài nguyên
+//   npm run dev
 
 
+// 65. Cài đặt Intervention Image
+// Website for reference: http://image.intervention.io/
+// - Chạy lệnh composer require intervention/image để cài đặt Image Invervention
+// - Trong config/app.php, thêm các mục như yêu cầu của Image Intervention (website, mục Installation)
+
+// 66. Thêm field file upload khi tạo bài viết mới
+// - Thêm field để upload file cả trong resources/view/create.blade.php và edit.blade.php, form enctype và autocomplete
+// - Thêm vadidation cho image upload trong app/Http/Controllers/HobbyController, phương thức update
+
+// 67. Xác định chiều (orientation) của ảnh
+// Trong HobbyController, use Intervention\Image\Facades\Image
+
+// 68. Convert & Save Images
+// Trong thư mục public/img, tạo thêm hai thư mục hobbies và users
+
+// 69. Outsource image calculation into function
+// 70. Display the images
+// Cập nhật tất cả view có chứa hình ảnh
+// resources/views/home.blade.php
+// resources/views/hobby/index.blade.php
+// resources/views/hobby/show.blade.php
+// resources/views/hobby/edit.blade.php
+// resources/views/user/show.blade.php
 
 
+// resources/views/hobby/index.blade.php
 
 
+// 71. Xóa hình ảnh
+// HobbyController, viết hàm deleteImages
+// Tạo Route trỏ đến hàm đó
+Route::get('/delete-images/hobby/{hobby_id}', [\App\Http\Controllers\HobbyController::class, 'deleteImages']);
+// hobby/edit.blade.php, thêm nút delete
 
+// 73. User Model & User Controller
+// Delete images of user
+Route::get('/delete-images/user/{user_id}', [\App\Http\Controllers\UserController::class, 'deleteImages']);
+
+// Thêm nút vào homepage - views/home.blade.php
+
+// 79. Control guests with the Auth() middleware
+// Xem git branch: git branch
+// Tạo branch mới: git checkout -b authorization
+// Kiểm tra lại git branch: git branch
+// Xem route list hobby: php artisan route:list --name=hobby
+
+// Thêm middleware cho route hobby - dòng 127
+// Trong HobbyController, thêm constructor và chỉ định middleware auth cho route
+
+// 80. Apply Auth() middleware to the rest of the controllers
+// HomeController, construct đã có middleware auth
+// UserController, thêm construct và middleware auth
+// TagController, thêm construct và middleware auth
+
+// 82. Switch app to 'production' to prevent migrate:refresh
+// Mở file .env, thay đổi APP_ENV=local thành APP_ENV=production
+// php artisan config:cache để config cache
+// Thử chạy php artisan migrate:fresh, Laravel báo 'Application in Production'
+
+// 83. Create Admin User
+// Tạo Role trong bảng users
+// Tạo Admin Seeder
+
+// Tạo Role trong bảng users
+// php artisan make:migration add_role_to_users_table --table=users
+// Viết hàm up & down cho migration mới tạo
+// Chạy migration: php artisan migrate
+
+
+// Tạo Admin Seeder
+// php artisan make:seeder AdminSeeder
+// Trong DatabaseSeeder.php thêm AdminSeeder vào để Seed cả Admin khi Seed dữ liệu
+// Viết code run cho AdminSeeder
+// Chạy Seeder: [help] php artisan db:seed -h
+// Chạy Seeder: php artisan db:seed --class=AdminSeeder
+
+
+// 84. Create admin middleware and use it for tags
+// Mục đích: Tạo admin middleware và áp dụng cho Tag, để chỉ có mỗi admin mới được thấy tag và edit/delete nó
+// Ba bước tạo middleware: Create, Register và Apply
+
+// - 1. Create admin middleware
+// php artisan make:middleware AdminMiddleware
+// Viết code cho hàm handle của AdminMiddleware
+
+// - 2. Register admin middleware
+// Đăng ký trong Kernel.php
+
+// - 3. Apply(use) admin middleware for tag
+// Sử dụng ở lớp cần sử dụng Middleware (TagController)
+
+
+// 85. Set up policies (make only your own data records editable)
+// Mỗi policy đều liên quan đến một Model
+// Mục tiêu: Tạo Policy cho từng Model: Hobby, Tag, User
+
+// php artisan make:policy HobbyPolicy --model=Hobby
+// php artisan make:policy UserPolicy --model=User
+// php artisan make:policy TagPolicy --model=Tag
+
+// 86. Apply hobby policy
+// Mở HobbyPolicy & HobbyController
+// Viết HobbyPolicy -> xem thêm ở HobbyPolicy
+// Viết HobbyController: create, store, delete, destroy methods
+
+
+// 87. User & Tag Policy
+// UserPolicy & UserController
+// UserPolicy - quy định policy
+// UserController - triển khai policy
+
+// TagPolicy & TagController
+// TagPolicy - quy định policy
+// TagController - triển khai policy
+
+
+// 88. Control buttons in the frontend with @can
+// views/index.blade.php - thêm @can - xem thêm ở views/index.blade.php
+
+// 89. Gates to control the assignment of the tags
+// 1. Fix lỗi attach và detach tag (dòng 401 và 404)
+// 2. hobbyTagController không có Model của riêng nó
+//    - Sử dụng Gate khi không có Model
+//    - Định nghĩa Gate ở app/Providers/AuthServiceProvider.php, phần boot
+//    - Sau khi định nghĩa xong thì triển khai Gate ở hobbyTagController, phần attachTag và detachTag

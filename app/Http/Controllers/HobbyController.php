@@ -6,6 +6,8 @@ use App\Models\Hobby;
 use Illuminate\Http\Request;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Session;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Gate;
 
 class HobbyController extends Controller
 {
@@ -56,13 +58,21 @@ class HobbyController extends Controller
     public function store(Request $request)
     {
         // 25. Server-side validation
-        $request->validate([
-            'name' => 'required|min:3',
-            'description' => 'required|min:5',
-        ]);
+        // 69. Comment this out
+//        $request->validate([
+//            'name' => 'required|min:3',
+//            'description' => 'required|min:5',
+//        ]);
         // Phần validate này sẽ xóa (clear) dữ liệu của field nếu các trường không thỏa
         // Để không xóa các field, trong views/hobby/create.blade.php, ở input name, bổ sung value="{{old('name')}}"
         // Tương tự cho input description
+
+        // 69 - Copy ở Update lên, xem thêm ở Update Method
+        $request->validate([
+            'name' => 'required|min:3',
+            'description' => 'required|min:5',
+            'image' => 'mimes:jpeg,jpg,bmp,png,gif',
+        ]);
 
         // 24. Lưu Hobby
         // Tạo ra một hobby mới, dựa vào name và description của request
@@ -73,6 +83,11 @@ class HobbyController extends Controller
         ]);
         // Lưu hobby
         $hobby->save();
+
+        // 69- Dời phần này xuống sau $hobby, nếu thêm trước thì $hobby chưa được tạo
+        if($request->image){
+            $this->saveImages($request->image, $hobby->id);
+        }
 
         // Gọi this-> phương thức index, mà trong phương thức index lại trả về view hobby.index
         // => Chuyển hướng đến trang index
@@ -125,9 +140,13 @@ class HobbyController extends Controller
      */
     public function edit(Hobby $hobby)
     {
-        //
+        // 86 Nếu cho phép update thì mới cho xem form edit
+        abort_unless(Gate::allows('update', $hobby), 403);
+
         return view('hobby.edit')->with([
-            'hobby'=>$hobby
+            'hobby'=>$hobby,
+            'message_success' => Session::get('message_success'),
+            'message_warning' => Session::get('message_warning')
         ]);
     }
 
@@ -140,11 +159,24 @@ class HobbyController extends Controller
      */
     public function update(Request $request, Hobby $hobby)
     {
+        // 86
+        abort_unless(Gate::allows('update', $hobby), 403);
+
         // Copy từ phương thức store xuống
         $request->validate([
             'name' => 'required|min:3',
             'description' => 'required|min:5',
+            'image' => 'mimes:jpeg,jpg,bmp,png,gif',
+            // 66. Bổ sung validate cho image upload
+            // 'image' => 'mimes:jpeg,jpg,bmp,png,gif|max:2' => cho phép upload tối đa 2KB
+            // 'image' => 'mimes:jpeg,jpg,bmp,png,gif|dimensions:max-width=200,min-height=100' => validate kích thước ảnh
+            // 'image' => 'mimes:jpeg,jpg,bmp,png,gif|dimensions:ratio=4/3' => validate tỷ lệ ảnh
         ]);
+
+        // 67, 68, 69
+        if($request->image){
+            $this->saveImages($request->image, $hobby->id);
+        }
 
         // Sửa thành update
         $hobby->update([
@@ -167,6 +199,10 @@ class HobbyController extends Controller
      */
     public function destroy(Hobby $hobby)
     {
+
+        // 86
+        abort_unless(Gate::allows('delete', $hobby), 403);
+
         $oldName = $hobby->name;
         $hobby->delete();
 
@@ -175,4 +211,65 @@ class HobbyController extends Controller
             'message_success' => 'The hobby <b>' . $oldName . '</b> was deleted.'
         ]);
     }
+
+    // 69
+    public function saveImages($imageInput, $hobby_id){
+        $image = Image::make($imageInput);
+
+        if($image->width() > $image->height()){
+            // 68
+            // landcape image
+            $image->widen(1200)
+                ->save(public_path() . "/img/hobbies/" . $hobby_id . "_large.jpg")
+                ->widen(400)->pixelate(12)
+                ->save(public_path() . "/img/hobbies/" . $hobby_id . "_pixelated.jpg");
+
+            // 68. Tạo hình ảnh thumbnail
+            // Lấy lại instance của hình ảnh tải lên
+            $image = Image::make($imageInput);
+            $image->widen(60)
+                ->save(public_path() . '/img/hobbies/' . $hobby_id . '_thumb.jpg');
+        }else{
+            // 68
+            // portrait image
+            $image->heighten(900)
+                ->save(public_path() . "/img/hobbies/" . $hobby_id . "_large.jpg")
+                ->heighten(400)->pixelate(12)
+                ->save(public_path() . "/img/hobbies/" . $hobby_id . "_pixelated.jpg");
+
+            // 68. Tạo hình ảnh thumbnail
+            // Lấy lại instance của hình ảnh tải lên
+            $image = Image::make($imageInput);
+            $image->heighten(60)
+                ->save(public_path() . '/img/hobbies/' . $hobby_id . '_thumb.jpg');
+        }
+    }
+
+    // 71. Xóa hình ảnh
+    public function deleteImages($hobby_id){
+        // Delete large image
+        if(file_exists(public_path() . "/img/hobbies/" . $hobby_id . "_large.jpg")){
+            unlink(public_path() . "/img/hobbies/" . $hobby_id . "_large.jpg");
+        }
+
+        // Delete pixelated image
+        if(file_exists(public_path() . "/img/hobbies/" . $hobby_id . "_pixelated.jpg")){
+            unlink(public_path() . "/img/hobbies/" . $hobby_id . "_pixelated.jpg");
+        }
+
+        // Delete thumb image
+        if(file_exists(public_path() . "/img/hobbies/" . $hobby_id . "_thumb.jpg")){
+            unlink(public_path() . "/img/hobbies/" . $hobby_id . "_thumb.jpg");
+        }
+
+        // after deletion, return
+        return back()->with([
+            'message_success' => 'The image was deleted'
+        ]);
+
+    }
+
+
+
+
 }
